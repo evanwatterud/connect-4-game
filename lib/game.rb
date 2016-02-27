@@ -3,11 +3,13 @@ require_relative "player"
 require "colorize"
 
 class Game
-  def initialize
-    @player_1 = Player.new("X".red)
-    @player_2 = Player.new("O".green)
+  def initialize(player_1 = Player.new("X".red), player_2 = Player.new("O".green))
+    @player_1 = player_1
+    @player_2 = player_2
     @board = Board.new
   end
+
+  attr_accessor :player_1, :player_2
 
   def set_names
     print "Please input the name of player 1: "
@@ -43,7 +45,6 @@ class Game
     end
     @board.update_board(@player_1.choice, @player_1.pieces)
     puts print_board
-    abort("#{@player_1.name} is the winner!") if check_winner_player_1
   end
 
   def player_2_turn
@@ -54,11 +55,19 @@ class Game
     end
     @board.update_board(@player_2.choice, @player_2.pieces)
     puts print_board
-    abort("#{@player_2.name} is the winner!") if check_winner_player_2
   end
 
   def check_board_full?
     @board.board_full?
+  end
+
+  def play_again?
+    puts "Do you want to play again? (y/n)"
+    answer = gets.chomp
+    if answer.downcase == "y"
+      return true
+    end
+    false
   end
 
   def prompt_player_1_choice
